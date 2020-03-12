@@ -1243,7 +1243,11 @@ clutter_texture_set_from_rgb_data   (ClutterTexture     *texture,
     }
   else
     {
-      if (bpp == 3)
+      if (bpp == 4)
+        {
+          source_format = COGL_PIXEL_FORMAT_RGBA_8888;
+        }
+      else if (bpp == 3)
         {
           source_format = COGL_PIXEL_FORMAT_RGB_888;
         }
@@ -1269,6 +1273,8 @@ clutter_texture_set_from_rgb_data   (ClutterTexture     *texture,
     source_format |= COGL_PREMULT_BIT;
   if ((flags & CLUTTER_TEXTURE_FLAG_16_BIT))
     internal_format = COGL_PIXEL_FORMAT_ANY_16;
+  else if (bpp == 4 && !has_alpha)
+    internal_format = COGL_PIXEL_FORMAT_RGB_888;
   else
     internal_format = COGL_PIXEL_FORMAT_ANY;
 
@@ -1718,7 +1724,11 @@ clutter_texture_set_area_from_rgb_data (ClutterTexture     *texture,
     }
   else
     {
-      if (bpp == 3)
+      if (bpp == 4)
+        {
+          source_format = COGL_PIXEL_FORMAT_RGBA_8888;
+        }
+      else if (bpp == 3)
         {
           source_format = COGL_PIXEL_FORMAT_RGB_888;
         }

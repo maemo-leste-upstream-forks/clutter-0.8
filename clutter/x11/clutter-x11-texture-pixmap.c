@@ -811,7 +811,12 @@ clutter_x11_texture_pixmap_update_area_real (ClutterX11TexturePixmap *texture,
     {
       bytes_per_line = image->bytes_per_line;
       data = first_pixel;
-      pixel_bpp = 3;
+
+      if (image->bits_per_pixel == 32)
+        pixel_bpp = 4;
+      else
+        pixel_bpp = 3;
+
       pixel_has_alpha = FALSE;
     }
   else if (priv->depth == 16)

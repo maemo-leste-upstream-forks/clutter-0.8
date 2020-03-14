@@ -1,3 +1,11 @@
+clutter (0.8.2.71) unstable; urgency=medium
+
+  * clutter_texture_set_from_rgb_data: add support for 32 bit XRGB data
+  * x11: Support 24 bits pixmaps with pixel data aligned to 32 bits.
+  * Switch packages section from n900 to libs.
+
+ -- Ivan J. <parazyd@dyne.org>  Sat, 14 Mar 2020 13:05:22 +0100
+
 clutter (0.8.2.70) unstable; urgency=medium
 
   * Port to Debian Buster: fix compilation warnings

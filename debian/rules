@@ -2,11 +2,7 @@
 %:
 	dh $@
 
-ifeq ($(DEB_HOST_ARCH),$(findstring $(DEB_HOST_ARCH),armel armhf))
 CONFFLAGS += --with-flavour=eglx
-else
-CONFFLAGS += --with-flavour=glx
-endif
 
 DEB_CPPFLAGS_MAINT_APPEND += -DG_DEBUG_DISABLE
 DEB_CFLAGS_MAINT_APPEND   += -Winline

@@ -1,3 +1,11 @@
+clutter (0.8.2.72) unstable; urgency=medium
+
+  * clutter/eglx/clutter-eglx-texture-pixmap.c: Fix fallback path usage when
+    there is no EGL_NOKIA_texture_from_pixmap extension
+  * Always build with eglx flavour
+
+ -- Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>  Sun, 15 Mar 2020 08:28:18 +0200
+
 clutter (0.8.2.71) unstable; urgency=medium
 
   * clutter_texture_set_from_rgb_data: add support for 32 bit XRGB data

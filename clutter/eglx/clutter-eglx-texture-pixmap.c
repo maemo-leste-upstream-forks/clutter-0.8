@@ -177,7 +177,6 @@ clutter_eglx_texture_pixmap_init (ClutterEGLXTexturePixmap *self)
 
   priv = self->priv = clutter_eglx_texture_pixmap_get_instance_private (self);
   priv->egl_surface = EGL_NO_SURFACE;
-  priv->use_fallback = FALSE;
   priv->current_pixmap = 0;
   priv->current_pixmap_depth = 0;
   priv->current_pixmap_width = 0;
@@ -205,6 +204,8 @@ clutter_eglx_texture_pixmap_init (ClutterEGLXTexturePixmap *self)
 
       _ext_check_done = TRUE;
     }
+
+  priv->use_fallback = !_have_tex_from_pixmap_ext;
 
   /* We need to know when the pixmap is about to be freed, so we can
    * eglDestroySurface before it's gone */

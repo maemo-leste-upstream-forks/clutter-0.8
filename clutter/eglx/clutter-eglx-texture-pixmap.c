@@ -383,7 +383,7 @@ clutter_eglx_texture_pixmap_bind (ClutterActor *actor)
                                           (EGLClientBuffer)pixmap,
                                           img_attribs);
 
-      if (priv->egl_image == EGL_NO_IMAGE)
+      if (priv->egl_image == EGL_NO_IMAGE_KHR)
         {
           g_warning ("%s: error %x, failed to create %s EGLImageKHR for %lx, "
                      "using X11 fallback.",

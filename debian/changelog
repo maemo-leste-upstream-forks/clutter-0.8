@@ -1,3 +1,11 @@
+clutter (0.8.2.73) unstable; urgency=medium
+
+  * clutter-eglx-texture-pixmap.c: fix fallback logic
+  * clutter-eglx-texture-pixmap.c: clean up
+  * Add EGL_KHR_image_pixmap extension support
+  * Fix wrong debug message appearance
+  * clutter-eglx-texture-pixmap.c: use EGL_NO_IMAGE_KHR instead of EGL_NO_IMAGE
+
 clutter (0.8.2.72) unstable; urgency=medium
 
   * clutter/eglx/clutter-eglx-texture-pixmap.c: Fix fallback path usage when

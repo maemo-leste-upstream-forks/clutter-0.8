@@ -1,3 +1,14 @@
+clutter (0.8.2.100) unstable; urgency=medium
+
+  * Add XRGB pixel format
+  * Add EGL_KHR_image_pixmap support
+  * Fix build time warnings
+  * Improve debug output
+  * Misc fixes
+  * Clean up
+
+ -- Arthur Demchenkov <spinal.by@gmail.com>  Mon, 23 Mar 2020 15:48:46 +0300
+
 clutter (0.8.2.70) unstable; urgency=medium
 
   * Port to Debian Buster: fix compilation warnings

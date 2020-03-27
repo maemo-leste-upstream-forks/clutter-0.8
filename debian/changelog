@@ -1,3 +1,9 @@
+clutter (0.8.2.74) unstable; urgency=medium
+
+  * Fix wrong build/install dependencies
+
+ -- Ivaylo Dimitrov <ivo.g.dimitrov.75@gmail.com>  Fri, 27 Mar 2020 18:52:33 +0200
+
 clutter (0.8.2.73) unstable; urgency=medium
 
   * clutter-eglx-texture-pixmap.c: fix fallback logic
@@ -5,6 +11,8 @@ clutter (0.8.2.73) unstable; urgency=medium
   * Add EGL_KHR_image_pixmap extension support
   * Fix wrong debug message appearance
   * clutter-eglx-texture-pixmap.c: use EGL_NO_IMAGE_KHR instead of EGL_NO_IMAGE
+
+ -- Ivan J. <parazyd@dyne.org>  Fri, 20 Mar 2020 15:58:01 +0200
 
 clutter (0.8.2.72) unstable; urgency=medium
 

@@ -9,7 +9,6 @@ Build-Depends:
  libxi-dev,
  libgdk-pixbuf2.0-dev,
  libpango1.0-dev,
- libgl1-mesa-dev,
  libgles2-mesa-dev,
 Standards-Version: 4.3.0
 
@@ -19,8 +18,7 @@ Multi-arch: same
 Depends:
  ${shlibs:Depends},
  ${misc:Depends},
- libgl1-mesa-glx [!armel !armhf],
- libgles2-mesa [armel armhf],
+ libgles2-mesa,
 Description: Open GL based interactive canvas library
  Clutter is an Open GL based interactive canvas library, designed for creating
  fast, mainly 2D single window applications such as media box UIs,
@@ -38,7 +36,6 @@ Depends:
  libxi-dev,
  libgdk-pixbuf2.0-dev,
  libpango1.0-dev,
- libgl1-mesa-dev,
  libgles2-mesa-dev,
 Description: Open GL based interactive canvas library (development files)
  Clutter is an Open GL based interactive canvas library, designed for creating

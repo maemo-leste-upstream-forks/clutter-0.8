@@ -89,7 +89,9 @@
  * AND the area for the last frame. */
 #if CLUTTER_COGL_HAS_GLES
 #define VIEWPORT_DAMAGE 0
-#define DOUBLE_BUFFER 0
+/* We enable double buffering now, contrary to the comment below, since flipping
+ * has been implemented and we use it. */
+#define DOUBLE_BUFFER 1
 /* We *should* be double-buffered, but because we're just blitting in
  * glSwapBuffers rather than flipping, we can do without the extra areas
  * drawn. THIS MUST BE SET TO 1 IF FLIPPING IS EVER IMPLEMENTED

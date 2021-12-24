@@ -1,3 +1,9 @@
+clutter (0.8.2.75) unstable; urgency=medium
+
+  * Make clutter stage double buffered to get correct damage calculation
+
+ -- Merlijn Wajer <merlijn@wizzup.org>  Fri, 24 Dec 2021 16:20:43 +0100
+
 clutter (0.8.2.74) unstable; urgency=medium
 
   * Fix wrong build/install dependencies

@@ -98,11 +98,14 @@ clutter_backend_egl_ensure_context (ClutterBackend *backend,
                           EGL_NO_CONTEXT);
         }
       else
-        eglMakeCurrent (backend_egl->edpy,
-                        stage_egl->egl_surface,
-                        stage_egl->egl_surface,
-                        backend_egl->egl_context);
-
+        {
+          eglMakeCurrent (backend_egl->edpy,
+                          stage_egl->egl_surface,
+                          stage_egl->egl_surface,
+                          backend_egl->egl_context);
+          eglSurfaceAttrib(backend_egl->edpy, stage_egl->egl_surface,
+                           EGL_SWAP_BEHAVIOR, EGL_BUFFER_PRESERVED);
+        }
       if (clutter_x11_untrap_x_errors ())
         g_critical ("Unable to make the stage window 0x%x the current "
                     "EGLX drawable",

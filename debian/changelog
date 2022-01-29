@@ -1,3 +1,9 @@
+clutter (0.8.2.77) unstable; urgency=medium
+
+  * Increase version for failing CI builds
+
+ -- Merlijn Wajer <merlijn@wizzup.org>  Sat, 29 Jan 2022 14:55:45 +0100
+
 clutter (0.8.2.76) unstable; urgency=medium
 
   * Request EGL_BUFFER_PRESERVED in egl mode

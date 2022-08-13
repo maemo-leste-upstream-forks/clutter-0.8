@@ -257,6 +257,19 @@ _clutter_backend_init_events (ClutterBackend *backend)
     klass->init_events (backend);
 }
 
+int
+_clutter_backend_buffer_age (ClutterBackend *backend,
+                             ClutterStage   *stage)
+{
+  ClutterBackendClass *klass;
+
+  klass = CLUTTER_BACKEND_GET_CLASS (backend);
+
+  if (G_LIKELY (klass->buffer_age))
+    return klass->buffer_age (backend, stage);
+
+  return 0;
+}
 
 /**
  * clutter_get_default_backend:

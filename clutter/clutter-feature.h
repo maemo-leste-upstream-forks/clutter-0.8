@@ -66,7 +66,8 @@ typedef enum
   CLUTTER_FEATURE_STAGE_CURSOR           = (1 << 8),
   CLUTTER_FEATURE_SHADERS_GLSL           = (1 << 9),
   CLUTTER_FEATURE_OFFSCREEN              = (1 << 10),
-  CLUTTER_FEATURE_STAGE_MULTIPLE         = (1 << 11)
+  CLUTTER_FEATURE_STAGE_MULTIPLE         = (1 << 11),
+  CLUTTER_FEATURE_BUFFER_AGE             = (1 << 12)
 } ClutterFeatureFlags;
 
 gboolean            clutter_feature_available       (ClutterFeatureFlags feature);

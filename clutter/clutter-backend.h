@@ -75,6 +75,8 @@ struct _ClutterBackendClass
                                             ClutterStage    *stage);
   void                (* ensure_context)   (ClutterBackend  *backend,
                                             ClutterStage    *stage);
+  int                 (* buffer_age)       (ClutterBackend  *backend,
+                                            ClutterStage    *stage);
 };
 
 GType clutter_backend_get_type    (void) G_GNUC_CONST;

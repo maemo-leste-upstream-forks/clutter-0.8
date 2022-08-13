@@ -100,6 +100,9 @@
 #define VIEWPORT_DAMAGE 0
 #define DOUBLE_BUFFER 1
 #endif
+
+#define MAX_BUFFER_AGE 2
+
 /* ----------------------------------------------------------------------*/
 /* ----------------------------------------------------------------------*/
 /* ----------------------------------------------------------------------*/
@@ -120,9 +123,8 @@ struct _ClutterStagePrivate
 
   /* if this is invalid, everything will be repainted */
   ClutterGeometry     damaged_area;
-  /* The damaged area on the last frame. We are double-buffered,
-   * so we must update both */
-  ClutterGeometry     last_damaged_area;
+  /* The damaged areas history */
+  GSList              *damage_history;
 
   int                 shaped_mode;
 
@@ -272,9 +274,7 @@ static void
 clutter_stage_paint (ClutterActor *self)
 {
   ClutterStagePrivate *priv = CLUTTER_STAGE (self)->priv;
-#if DOUBLE_BUFFER
-  ClutterGeometry      last_damage;
-#endif
+  ClutterGeometry      *damage;
   gboolean             update_area;
   guint                width, height;
 
@@ -282,15 +282,73 @@ clutter_stage_paint (ClutterActor *self)
 
   CLUTTER_NOTE (PAINT, "Initializing stage paint");
 
+  if (clutter_feature_available (CLUTTER_FEATURE_BUFFER_AGE))
+    {
+      ClutterBackend *backend = clutter_get_default_backend ();
+      int age = _clutter_backend_buffer_age (backend, CLUTTER_STAGE (self));
+
+      damage = g_new (ClutterGeometry, 1);
+      *damage = priv->damaged_area;
+
+      CLUTTER_NOTE (PAINT, "Back buffer age %d history depth %d", age,
+                    g_slist_length (priv->damage_history));
+
+      priv->damage_history = g_slist_prepend (priv->damage_history, damage);
+
+      if (age != 0)
+        {
+          if (g_slist_length (priv->damage_history) > age)
+            {
+              GSList *l = priv->damage_history;
+              int i = 0;
+
+              for (l = l->next; l; l = l->next)
+                {
+                  if (i < age)
+                    {
+                      damage = l->data;
+                      clutter_stage_set_damaged_area(self, *damage);
+                    }
+
+                  i++;
+
+                  if (i > MAX_BUFFER_AGE)
+                    {
+                      g_slist_free_full (l->next, g_free);
+                      l->next = NULL;
+                    }
+                }
+            }
+          else
+            {
+              CLUTTER_NOTE (PAINT, "Back buffer too old, redraw everything");
+              priv->damaged_area.x = 0;
+              priv->damaged_area.y = 0;
+              priv->damaged_area.width = 0;
+              priv->damaged_area.height = 0;
+            }
+
+        }
+      else
+        {
+          CLUTTER_NOTE (PAINT, "Invalid back buffer: Resetting damage history");
+
+          g_slist_free_full (priv->damage_history, g_free);
+          priv->damage_history = NULL;
+        }
+    }
+  else
+    {
 #if DOUBLE_BUFFER
-  last_damage = priv->last_damaged_area;
-  priv->last_damaged_area = priv->damaged_area;
-  /* Add the damaged area from last frame to this one, as we're double-buffered
-   * so will have missed 2 frames worth of changes! */
-  clutter_stage_set_damaged_area(self, last_damage);
-#else
-  priv->last_damaged_area = priv->damaged_area;
+      damage = priv->damage_history->data;
+
+      /* Add the damaged area from last frame to this one, as we're
+       * double-buffered so will have missed 2 frames worth of changes! */
+      clutter_stage_set_damaged_area(self, *damage);
+      *damage = priv->damaged_area;
+
 #endif
+    }
 
   /* If we only had a small area, redraw that */
   update_area = priv->damaged_area.width>0 && priv->damaged_area.height>0;
@@ -613,6 +671,9 @@ clutter_stage_dispose (GObject *object)
       priv->impl = NULL;
     }
 
+  g_slist_free_full (priv->damage_history, g_free);
+  priv->damage_history = NULL;
+
   G_OBJECT_CLASS (clutter_stage_parent_class)->dispose (object);
 }
 
@@ -835,7 +896,9 @@ clutter_stage_init (ClutterStage *self)
 {
   ClutterStagePrivate *priv;
   ClutterBackend *backend;
-
+#if DOUBLE_BUFFER
+  ClutterGeometry *damage;
+#endif
   /* a stage is a top-level object */
   CLUTTER_SET_PRIVATE_FLAGS (self, CLUTTER_ACTOR_IS_TOPLEVEL);
 
@@ -881,7 +944,15 @@ clutter_stage_init (ClutterStage *self)
   priv->damaged_area.y = 0;
   priv->damaged_area.width = 0;
   priv->damaged_area.height = 0;
-  priv->last_damaged_area = priv->damaged_area;
+
+#if DOUBLE_BUFFER
+  if (!clutter_feature_available (CLUTTER_FEATURE_BUFFER_AGE))
+    {
+      damage = g_new (ClutterGeometry, 1);
+      *damage = priv->damaged_area;
+      priv->damage_history = g_slist_prepend (priv->damage_history, damage);
+    }
+#endif
 
   clutter_actor_set_reactive (CLUTTER_ACTOR (self), TRUE);
   clutter_stage_set_key_focus (self, NULL);

@@ -103,14 +103,42 @@ clutter_backend_egl_ensure_context (ClutterBackend *backend,
                           stage_egl->egl_surface,
                           stage_egl->egl_surface,
                           backend_egl->egl_context);
-          eglSurfaceAttrib(backend_egl->edpy, stage_egl->egl_surface,
-                           EGL_SWAP_BEHAVIOR, EGL_BUFFER_PRESERVED);
+          if (!clutter_feature_available (CLUTTER_FEATURE_BUFFER_AGE))
+            {
+              eglSurfaceAttrib(backend_egl->edpy, stage_egl->egl_surface,
+                               EGL_SWAP_BEHAVIOR, EGL_BUFFER_PRESERVED);
+            }
         }
+
       if (clutter_x11_untrap_x_errors ())
         g_critical ("Unable to make the stage window 0x%x the current "
                     "EGLX drawable",
                     (int) stage_x11->xwin);
     }
+}
+
+static int
+clutter_backend_egl_buffer_age (ClutterBackend *backend,
+                                ClutterStage   *stage)
+{
+  ClutterBackendEGL *backend_egl = CLUTTER_BACKEND_EGL (backend);
+  ClutterStageWindow *impl;
+  ClutterStageEGL    *stage_egl;
+  EGLint              age = 0;
+
+  g_return_val_if_fail (stage != NULL, 0);
+
+  impl = _clutter_stage_get_window (stage);
+  g_assert (impl != NULL);
+
+  stage_egl = CLUTTER_STAGE_EGL (impl);
+
+  g_return_val_if_fail (stage_egl->egl_surface != EGL_NO_SURFACE, 0);
+
+  eglQuerySurface(backend_egl->edpy, stage_egl->egl_surface, EGL_BUFFER_AGE_EXT,
+                  &age);
+
+  return age;
 }
 
 static void
@@ -205,9 +233,15 @@ clutter_backend_egl_constructor (GType                  gtype,
 static ClutterFeatureFlags
 clutter_backend_egl_get_features (ClutterBackend *backend)
 {
-#ifdef CLUTTER_ENABLE_DEBUG
   ClutterBackendEGL  *backend_egl = CLUTTER_BACKEND_EGL (backend);
+  ClutterFeatureFlags flags;
+  const char *eglx_extensions = NULL;
 
+  /* We can actually resize too */
+  flags = CLUTTER_FEATURE_STAGE_CURSOR|CLUTTER_FEATURE_STAGE_MULTIPLE;
+  eglx_extensions = eglQueryString (backend_egl->edpy, EGL_EXTENSIONS);
+
+#ifdef CLUTTER_ENABLE_DEBUG
   CLUTTER_NOTE (BACKEND, "Checking features\n"
                 "GL_VENDOR: %s\n"
                 "GL_RENDERER: %s\n"
@@ -222,11 +256,16 @@ clutter_backend_egl_get_features (ClutterBackend *backend)
                 glGetString (GL_EXTENSIONS),
                 eglQueryString (backend_egl->edpy, EGL_VENDOR),
                 eglQueryString (backend_egl->edpy, EGL_VERSION),
-                eglQueryString (backend_egl->edpy, EGL_EXTENSIONS));
+                eglx_extensions);
 #endif
 
-  /* We can actually resize too */
-  return CLUTTER_FEATURE_STAGE_CURSOR|CLUTTER_FEATURE_STAGE_MULTIPLE;
+  if (cogl_check_extension ("EGL_EXT_buffer_age", eglx_extensions))
+    {
+      CLUTTER_NOTE (BACKEND, "buffer age is supported\n");
+      flags |= CLUTTER_FEATURE_BUFFER_AGE;
+    }
+
+  return flags;
 }
 
 static ClutterActor *
@@ -274,6 +313,7 @@ clutter_backend_egl_class_init (ClutterBackendEGLClass *klass)
   backend_class->get_features   = clutter_backend_egl_get_features;
   backend_class->create_stage   = clutter_backend_egl_create_stage;
   backend_class->ensure_context = clutter_backend_egl_ensure_context;
+  backend_class->buffer_age     = clutter_backend_egl_buffer_age;
 }
 
 static void

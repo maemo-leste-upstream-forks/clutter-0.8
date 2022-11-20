@@ -300,11 +300,11 @@ typedef gint32 ClutterAngle;    /* angle such that 1024 == 2*PI */
 
 /*< public >*/
 /* Fixed point math routines */
-G_INLINE_FUNC
+static inline
 ClutterFixed clutter_qmulx (ClutterFixed op1,
 			    ClutterFixed op2);
 #if defined (G_CAN_INLINE)
-G_INLINE_FUNC
+static inline
 ClutterFixed clutter_qmulx (ClutterFixed op1,
 			    ClutterFixed op2)
 {
@@ -326,11 +326,11 @@ ClutterFixed clutter_qmulx (ClutterFixed op1,
 }
 #endif
 
-G_INLINE_FUNC
+static inline
 ClutterFixed clutter_qdivx (ClutterFixed op1,
 			    ClutterFixed op2);
 #if defined (G_CAN_INLINE)
-G_INLINE_FUNC
+static inline
 ClutterFixed clutter_qdivx (ClutterFixed op1,
 			    ClutterFixed op2)
 {

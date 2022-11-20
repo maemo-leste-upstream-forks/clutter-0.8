@@ -1,3 +1,9 @@
+clutter (0.8.2.79) unstable; urgency=medium
+
+  * clutter: deprecate G_INLINE_FUNC
+
+ -- Merlijn Wajer <merlijn@wizzup.org>  Sun, 20 Nov 2022 15:17:54 +0100
+
 clutter (0.8.2.78) unstable; urgency=medium
 
   * egl: add support for EXT_buffer_age extension

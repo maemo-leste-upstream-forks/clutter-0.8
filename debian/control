@@ -7,7 +7,7 @@ Build-Depends:
  libxcomposite-dev,
  libxdamage-dev,
  libxi-dev,
- libgdk-pixbuf2.0-dev,
+ libgdk-pixbuf-2.0-dev,
  libpango1.0-dev,
  libgles2-mesa-dev,
 Standards-Version: 4.3.0
@@ -34,7 +34,7 @@ Depends:
  libxcomposite-dev,
  libxdamage-dev,
  libxi-dev,
- libgdk-pixbuf2.0-dev,
+ libgdk-pixbuf-2.0-dev,
  libpango1.0-dev,
  libgles2-mesa-dev,
 Description: Open GL based interactive canvas library (development files)
